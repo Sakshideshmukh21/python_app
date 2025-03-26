@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        IMAGE_NAME = "sakshideshmukh/python-app"  // Lowercase username
+        IMAGE_NAME = "sakshi2105/python-app"  // DockerHub username sakshi2105
     }
     stages {
         stage('Checkout') {
