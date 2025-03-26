@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        IMAGE_NAME = "sakshideshmukh21/python-app"
+        IMAGE_NAME = "sakshideshmukh/python-app"  // Lowercase username
     }
     stages {
         stage('Checkout') {
@@ -14,14 +14,14 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("\${IMAGE_NAME}:\${env.BUILD_ID}")
+                    docker.build("${IMAGE_NAME}:${env.BUILD_ID}")
                 }
             }
         }
         stage('Test') {
             steps {
                 script {
-                    docker.image("\${IMAGE_NAME}:\${env.BUILD_ID}").inside {
+                    docker.image("${IMAGE_NAME}:${env.BUILD_ID}").inside {
                         sh 'python3 --version'
                     }
                 }
@@ -31,8 +31,8 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
-                        docker.image("\${IMAGE_NAME}:\${env.BUILD_ID}").push()
-                        docker.image("\${IMAGE_NAME}:\${env.BUILD_ID}").push('latest')
+                        docker.image("${IMAGE_NAME}:${env.BUILD_ID}").push()
+                        docker.image("${IMAGE_NAME}:${env.BUILD_ID}").push('latest')
                     }
                 }
             }
@@ -41,7 +41,7 @@ pipeline {
             steps {
                 script {
                     sh 'docker stop python-app || true && docker rm python-app || true'
-                    sh "docker run -d --name python-app -p 5000:5000 \${IMAGE_NAME}:latest"
+                    sh "docker run -d --name python-app -p 5000:5000 ${IMAGE_NAME}:latest"
                 }
             }
         }
@@ -52,4 +52,3 @@ pipeline {
         }
     }
 }
-
